@@ -6,12 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
-
 
 @Entity
 @Getter
@@ -19,11 +15,14 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @ToString
 
-@Table(name ="Billing_Data_Mobikwik")
-public class BillingEntityMobikwik {
-
+//@Table(name ="Billing_Data")
+@Table(name ="phonepe_transaction")
+public class PhonepeTransaction {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private long rowid;
     @Column(name = "TxnCorrelationId")
     private String id;
 
@@ -198,7 +197,7 @@ public class BillingEntityMobikwik {
 
     @Override
     public String toString() {
-        return "BillingEntityMobikwik{" +
+        return "BillingEntity{" +
                 "id='" + id + '\'' +
                 ", TerminalId='" + TerminalId + '\'' +
                 ", MerchantId='" + MerchantId + '\'' +

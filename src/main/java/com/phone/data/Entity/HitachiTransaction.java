@@ -9,16 +9,22 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
 
-@Table(name ="Billing_Data")
-public class BillingEntity {
+//@Table(name ="Billing_Data_Hitachi")
+@Table(name ="hitachi_transaction")
+public class HitachiTransaction {
+
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private long rowid;
     @Column(name = "TxnCorrelationId")
     private String id;
 
@@ -193,7 +199,7 @@ public class BillingEntity {
 
     @Override
     public String toString() {
-        return "BillingEntity{" +
+        return "BillingEntityHitachi{" +
                 "id='" + id + '\'' +
                 ", TerminalId='" + TerminalId + '\'' +
                 ", MerchantId='" + MerchantId + '\'' +
