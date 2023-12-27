@@ -87,7 +87,7 @@ public class Billingimpl implements BillingService {
                     //staticQR
                     System.gc();
                     logger.info("staticQR Data after fetch");
-                    saveSettlementRecordsHitachi(transactionDatas);
+                    saveSettlementRecordsStaticqr(transactionDatas);
                     logger.info("StaticQR Data Completed");
                 } else {
                     logger.info("else part");
@@ -101,7 +101,7 @@ public class Billingimpl implements BillingService {
     @Transactional()
     public void saveSettlementRecords(List<Object[]> objects) {
         List<PhonepeTransaction> transactions = new ArrayList<>();
-        phonepeInfo.info("Transaction Size phonepe {}", objects.size());
+        phonepeInfo.info("Transaction Size phonepe objects {}", objects.size());
         try{
             if (objects.size() > 0) {
                 objects.forEach(o -> {
@@ -144,7 +144,7 @@ public class Billingimpl implements BillingService {
     @Transactional()
     public void saveSettlementRecordsAxis(List<Object[]> objects) {
         List<AxisTransaction> transactions = new ArrayList<>();
-        axisInfo.info("Axis Transaction Size {}", objects.size());
+        axisInfo.info("Axis Transaction Size objects {}", objects.size());
         try{
             if (objects.size() > 0) {
                 objects.forEach(o -> {
@@ -185,7 +185,7 @@ public class Billingimpl implements BillingService {
     @Transactional()
     public void saveSettlementRecordskvb(List<Object[]> objects) {
         List<KVBTransaction> transactions = new ArrayList<>();
-        kVBInfo.info("Transaction Size kvb {}", objects.size());
+        kVBInfo.info("Transaction Size kvb objects {}", objects.size());
         try{
             if (objects.size() > 0) {
                 objects.forEach(o -> {
@@ -227,7 +227,7 @@ public class Billingimpl implements BillingService {
     @Transactional()
     public void saveSettlementRecordsHitachi(List<Object[]> objects) {
         List<HitachiTransaction> transactions = new ArrayList<>();
-        hitachiInfo.info("Transaction Size Hitachi {}", objects.size());
+        hitachiInfo.info("Transaction Size Hitachi objects {}", objects.size());
         try{
             if (objects.size() > 0) {
                 objects.forEach(o -> {
@@ -269,7 +269,7 @@ public class Billingimpl implements BillingService {
     @Transactional()
     public void saveSettlementRecordsMobikwik(List<Object[]> objects) {
         List<MobikwikTransaction> transactions = new ArrayList<>();
-        mobikwikInfo.info("Transaction Size Mobikwik {}", objects.size());
+        mobikwikInfo.info("Transaction Size Mobikwik objects {}", objects.size());
         try{
             if (objects.size() > 0) {
                 objects.forEach(o -> {
@@ -309,7 +309,7 @@ public class Billingimpl implements BillingService {
     @Transactional()
     public void saveSettlementRecordsStaticqr(List<Object[]> objects) {
         List<StaticQrTxn> transactions = new ArrayList<>();
-        staticqrInfo.info("Transaction Size StaticQR {}", objects.size());
+        staticqrInfo.info("Transaction Size StaticQR objects {}", objects.size());
         try{
             if (objects.size() > 0) {
                 objects.forEach(o -> {
@@ -331,8 +331,8 @@ public class Billingimpl implements BillingService {
                     data.setTransactionTimestamp(String.valueOf(o[count++]));
                     data.setPayeractype(String.valueOf(o[count++]));
                     data.setInit_mode(String.valueOf(o[count++]));
-                    data.setPurpose_code(String.valueOf(o[count++]));
-                    data.setBin(String.valueOf(o[count]));
+                    data.setPurpose_code(String.valueOf(o[count]));
+                    data.setBin(String.valueOf("bin"));
                     transactions.add(data);
                     count = 0;
                 });
@@ -393,7 +393,15 @@ public class Billingimpl implements BillingService {
         kVBInfo.info("kvb count {}",yesterday +"-"+kvb);
         String mobikwik = billingMobikwikRepo.yesterdayCount(String.valueOf(yesterday));
         mobikwikInfo.info("mobikwik count {}",yesterday +"-"+mobikwik);
-        array= Arrays.asList(phonepe,axis,hitachi,kvb,mobikwik);
+        String staticqr = staticQrRepo.yesterdayCount(String.valueOf(yesterday));
+        staticqrInfo.info("staticqr count {}",yesterday +"-"+staticqr);
+//        array= Arrays.asList(phonepe,axis,hitachi,kvb,mobikwik);
+        array.add(phonepe);
+        array.add(axis);
+        array.add(hitachi);
+        array.add(kvb);
+        array.add(mobikwik);
+        array.add(staticqr);
 
      return array;
     }

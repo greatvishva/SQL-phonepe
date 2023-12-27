@@ -140,9 +140,12 @@ public class BillingDataController {
             stmt = con.createStatement();
 
 
+//            String query = "SELECT req.TxnCorrelationId,req.TerminalId, req.MerchantId, req.MTI, req.TxnType, res.Stan, res.AuthResponseCode,res.TxnResponseCode, req.TxnAmount, req.TxnAdditionalAmount,req.BatchNumber,req.InvoiceNumber, res.RRNumber, req.InstitutionId, req.RequestRouteTime, res.ResponseReceivedTime FROM switch_request req left join switch_response res" +
+//                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WL002' and req.RequestRouteTime  between '" + phonepe +
+//                    "' AND DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 2 MINUTE) ORDER BY req.RequestRouteTime limit 500";
             String query = "SELECT req.TxnCorrelationId,req.TerminalId, req.MerchantId, req.MTI, req.TxnType, res.Stan, res.AuthResponseCode,res.TxnResponseCode, req.TxnAmount, req.TxnAdditionalAmount,req.BatchNumber,req.InvoiceNumber, res.RRNumber, req.InstitutionId, req.RequestRouteTime, res.ResponseReceivedTime FROM switch_request req left join switch_response res" +
-                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WL002' and req.RequestRouteTime  between '" + phonepe +
-                    "' AND DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 2 MINUTE) ORDER BY req.RequestRouteTime limit 500";
+                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WL002' and req.RequestRouteTime  > '" + phonepe +
+                    "'  ORDER BY req.RequestRouteTime limit 500";
             logger.info("Output query : {}", query);
 
             List<Object[]> transactionDatasphonepe = new ArrayList<>();
@@ -165,9 +168,12 @@ public class BillingDataController {
           Statement  stmt1 = con.createStatement();
 
 
+//            String queryaxis = "SELECT req.TxnCorrelationId,req.TerminalId, req.MerchantId, req.MTI, req.TxnType, res.Stan, res.AuthResponseCode,res.TxnResponseCode, req.TxnAmount, req.TxnAdditionalAmount,req.BatchNumber,req.InvoiceNumber, res.RRNumber, req.InstitutionId, req.RequestRouteTime, res.ResponseReceivedTime FROM switch_request req left join switch_response res" +
+//                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WLBP1' and req.RequestRouteTime  between '" + axis +
+//                    "' AND DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 2 MINUTE) ORDER BY req.RequestRouteTime limit 200";
             String queryaxis = "SELECT req.TxnCorrelationId,req.TerminalId, req.MerchantId, req.MTI, req.TxnType, res.Stan, res.AuthResponseCode,res.TxnResponseCode, req.TxnAmount, req.TxnAdditionalAmount,req.BatchNumber,req.InvoiceNumber, res.RRNumber, req.InstitutionId, req.RequestRouteTime, res.ResponseReceivedTime FROM switch_request req left join switch_response res" +
-                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WLBP1' and req.RequestRouteTime  between '" + axis +
-                    "' AND DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 2 MINUTE) ORDER BY req.RequestRouteTime limit 200";
+                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WLBP1' and req.RequestRouteTime > '" + axis +
+                    "' ORDER BY req.RequestRouteTime limit 200";
             logger.info("Output query Axis : {}", queryaxis);
 
             List<Object[]> transactionDatasaxis = new ArrayList<>();
@@ -190,9 +196,12 @@ public class BillingDataController {
             Statement  stmt2 = con.createStatement();
 
 
+//            String querykvb = "SELECT req.TxnCorrelationId,req.TerminalId, req.MerchantId, req.MTI, req.TxnType, res.Stan, res.AuthResponseCode,res.TxnResponseCode, req.TxnAmount, req.TxnAdditionalAmount,req.BatchNumber,req.InvoiceNumber, res.RRNumber, req.InstitutionId, req.RequestRouteTime, res.ResponseReceivedTime FROM switch_request req left join switch_response res" +
+//                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WL001' and req.RequestRouteTime  between '" + kvb +
+//                    "' AND DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 2 MINUTE) ORDER BY req.RequestRouteTime limit 200";
             String querykvb = "SELECT req.TxnCorrelationId,req.TerminalId, req.MerchantId, req.MTI, req.TxnType, res.Stan, res.AuthResponseCode,res.TxnResponseCode, req.TxnAmount, req.TxnAdditionalAmount,req.BatchNumber,req.InvoiceNumber, res.RRNumber, req.InstitutionId, req.RequestRouteTime, res.ResponseReceivedTime FROM switch_request req left join switch_response res" +
-                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WL001' and req.RequestRouteTime  between '" + kvb +
-                    "' AND DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 2 MINUTE) ORDER BY req.RequestRouteTime limit 200";
+                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WL001' and req.RequestRouteTime > '" + kvb +
+                    "'  ORDER BY req.RequestRouteTime limit 200";
             logger.info("Output query KVB : {}", querykvb);
 
             List<Object[]> transactionDataskvb = new ArrayList<>();
@@ -216,9 +225,12 @@ public class BillingDataController {
             Statement  stmt3 = con.createStatement();
 
 
+//            String queryhitachi = "SELECT req.TxnCorrelationId,req.TerminalId, req.MerchantId, req.MTI, req.TxnType, res.Stan, res.AuthResponseCode,res.TxnResponseCode, req.TxnAmount, req.TxnAdditionalAmount,req.BatchNumber,req.InvoiceNumber, res.RRNumber, req.InstitutionId, req.RequestRouteTime, res.ResponseReceivedTime FROM switch_request req left join switch_response res" +
+//                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='00' and req.RequestRouteTime  between '" + hitachi +
+//                    "' AND DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 2 MINUTE) ORDER BY req.RequestRouteTime limit 500";
             String queryhitachi = "SELECT req.TxnCorrelationId,req.TerminalId, req.MerchantId, req.MTI, req.TxnType, res.Stan, res.AuthResponseCode,res.TxnResponseCode, req.TxnAmount, req.TxnAdditionalAmount,req.BatchNumber,req.InvoiceNumber, res.RRNumber, req.InstitutionId, req.RequestRouteTime, res.ResponseReceivedTime FROM switch_request req left join switch_response res" +
-                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='00' and req.RequestRouteTime  between '" + hitachi +
-                    "' AND DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 2 MINUTE) ORDER BY req.RequestRouteTime limit 500";
+                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='00' and req.RequestRouteTime  > '" + hitachi +
+                    "'  ORDER BY req.RequestRouteTime limit 500";
             logger.info("Output query Hitachi : {}", queryhitachi);
 
             List<Object[]> transactionDatashitachi = new ArrayList<>();
@@ -242,9 +254,12 @@ public class BillingDataController {
             Statement  stmt4 = con.createStatement();
 
 
+//            String querymobikwik = "SELECT req.TxnCorrelationId,req.TerminalId, req.MerchantId, req.MTI, req.TxnType, res.Stan, res.AuthResponseCode,res.TxnResponseCode, req.TxnAmount, req.TxnAdditionalAmount,req.BatchNumber,req.InvoiceNumber, res.RRNumber, req.InstitutionId, req.RequestRouteTime, res.ResponseReceivedTime FROM switch_request req left join switch_response res" +
+//                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WL003' and req.RequestRouteTime  between '" + mobikwik +
+//                    "' AND DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 2 MINUTE) ORDER BY req.RequestRouteTime limit 200";
             String querymobikwik = "SELECT req.TxnCorrelationId,req.TerminalId, req.MerchantId, req.MTI, req.TxnType, res.Stan, res.AuthResponseCode,res.TxnResponseCode, req.TxnAmount, req.TxnAdditionalAmount,req.BatchNumber,req.InvoiceNumber, res.RRNumber, req.InstitutionId, req.RequestRouteTime, res.ResponseReceivedTime FROM switch_request req left join switch_response res" +
-                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WL003' and req.RequestRouteTime  between '" + mobikwik +
-                    "' AND DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 2 MINUTE) ORDER BY req.RequestRouteTime limit 200";
+                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WL003' and req.RequestRouteTime  > '" + mobikwik +
+                    "' ORDER BY req.RequestRouteTime limit 200";
             logger.info("Output query Mobikwik : {}", querymobikwik);
 
             List<Object[]> transactionDatasmobikwik = new ArrayList<>();
@@ -288,7 +303,8 @@ public class BillingDataController {
             Connection con1 = DriverManager.getConnection(url1, username1, password1);
             Statement statement = con1.createStatement();
             List<Object[]> transactionDatastaticqr = new ArrayList<>();
-            String query = "select * from static_qr_txn where created_at between " + init + " AND DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 2 MINUTE)";
+            String query = "select * from static_qr_txn where created_at > '" + init + "' order by created_at desc limit 100 ";
+           logger.info("StaticQR txn Quert {}",query);
             ResultSet resultSet5 = statement.executeQuery(query);
             while (resultSet5.next()) {
                 int cols = resultSet5.getMetaData().getColumnCount();
@@ -299,7 +315,7 @@ public class BillingDataController {
                 transactionDatastaticqr.add(arr);
 
             }
-            logger.info("SWITCH-TXN : transactions size Mobikwik : {}", transactionDatastaticqr.size());
+            logger.info("SWITCH-TXN : transactions size StaticQR : {}", transactionDatastaticqr.size());
             resultSet5.close();
             statement.close();
 
@@ -337,7 +353,8 @@ public class BillingDataController {
                     "<td> "+countArray.get(3)+ "</td> </tr></b>"+
                     "<tr> <td> " + "Mobikwik -"+ "</td>"+
                     "<td> "+countArray.get(4)+ "</td> </tr></b>"+
-
+                    "<tr> <td> " + "StaticQR -"+ "</td>"+
+                    "<td> "+countArray.get(5)+ "</td> </tr></b>"+
                     "</table> </body> <html>";
 
 //                    "Phonepe  - " + countArray.get(0)+ "\n\n"+

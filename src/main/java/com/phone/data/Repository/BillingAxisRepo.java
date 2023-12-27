@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BillingAxisRepo extends JpaRepository<AxisTransaction,String> {
 
-    @Query(value = "SELECT top 1 (RequestRouteTime) FROM Billing_Data_Axis order by RequestRouteTime desc", nativeQuery = true)
+    @Query(value = "SELECT top 1 (RequestRouteTime) FROM axis_transaction order by RequestRouteTime desc", nativeQuery = true)
     String findByRespRecTimeAxis();
 
-    @Query(value = "select count(*) from Billing_Data_Axis where  RequestRouteTime like '?1%'",nativeQuery = true)
+    @Query(value = "select count(*) from axis_transaction where  RequestRouteTime like '?1%'",nativeQuery = true)
+//    @Query(value = "select count(*) from axis_transaction ",nativeQuery = true)
     String yesterdayCount(String yesterday);
 }
