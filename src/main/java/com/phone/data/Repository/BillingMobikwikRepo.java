@@ -11,7 +11,7 @@ public interface BillingMobikwikRepo extends JpaRepository<MobikwikTransaction,S
     @Query(value = "SELECT top 1 (RequestRouteTime) FROM mobikwik_transaction order by RequestRouteTime desc", nativeQuery = true)
     String findByRespRecTimeMobikwik();
 
-    @Query(value = "select count(*) from mobikwik_transaction where  RequestRouteTime like '?1%'",nativeQuery = true)
+    @Query(value = "select count(*) from mobikwik_transaction where  RequestRouteTime like ?1% ",nativeQuery = true)
 //    @Query(value = "select count(*) from mobikwik_transaction ",nativeQuery = true)
     String yesterdayCount(String yesterday);
 }

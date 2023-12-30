@@ -382,7 +382,12 @@ public class Billingimpl implements BillingService {
 
         LocalDate curdate = LocalDate.now();
         LocalDate yesterday =curdate.minusDays(1);
+//        String yesterday = "2022";
         List<String> array = new ArrayList<>();
+//        String query1 = "select count(*) from phonepe_transaction where  RequestRouteTime like '"+yesterday+"%'";
+//        phonepeInfo.info(query1);
+//        logger.info(String.valueOf(yesterday));
+//        System.out.println(yesterday);
         String phonepe = billingModelRepository.yesterdayCount(String.valueOf(yesterday));
         phonepeInfo.info("phonepe count {}",yesterday +"-"+ phonepe);
         String axis    = billingAxisRepo.yesterdayCount(String.valueOf(yesterday));

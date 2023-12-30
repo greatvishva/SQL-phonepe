@@ -11,7 +11,11 @@ public interface BillingRepo extends JpaRepository<PhonepeTransaction,String> {
     String findByRespRecTime();
 
 
-    @Query(value = "select count(*) from phonepe_transaction where  RequestRouteTime like '?1%'",nativeQuery = true)
+    @Query(value = "select count(*) from phonepe_transaction where RequestRouteTime like ?1%",nativeQuery = true)
 //    @Query(value = "select count(*) from phonepe_transaction ",nativeQuery = true)
     String yesterdayCount(String yesterday);
+
+    @Query(value = "select MTI,count(*) from phonepe_transaction where RequestRouteTime like ?1% group by MTI",nativeQuery = true)
+//    @Query(value = "select count(*) from phonepe_transaction ",nativeQuery = true)
+    String reversalCount(String yesterday);
 }
