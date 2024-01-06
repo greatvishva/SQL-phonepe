@@ -12,9 +12,7 @@ import org.springframework.data.relational.core.sql.In;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -435,6 +433,117 @@ public class BillingDataController {
 
 
         final String TO = "txn.support@bijlipay.co.in";
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH");
+        String date = simpleDateFormat.format(calendar.getTime());
+        System.out.println(date);
+        List<String> countArray = countArray1;
+        MimeMessage message = sender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, false, "utf-8");
+
+        message.setFrom("docs@bijlipay.co.in");
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(TO));
+        StringBuffer htmldata = new StringBuffer(110);
+        for(int i =0; i< countArray.size();i++){
+            if(i%2==0){
+             htmldata.append("<tr> <td> " + countArray.get(i) + "</td>").toString();
+//                System.out.println("odd"+htmldata);
+            }if(i%2==1){
+                htmldata.append("<td> " + countArray.get(i) + "</td> </tr></b>").toString();
+//                System.out.println("even"+htmldata);
+            }
+        }
+//        System.out.println("htmldata ------------------"+htmldata);
+        try {
+            String msgBody = "Dear All," + "\n\n" + "Greetings from Bijlipay!!" + "\n\n" + "Here mentioned  " + " MTI wise transaction count, please inform if count more than 1000 for reversal. " + "\n\n" + "Regards," + "\n" + "Team " + "Bijlipay\n\n Note :" + "This is an auto generated email. Please do not respond to this email id...\n\n " +
+                    "<html> <head> <title> MTI wise count details </title> </head>" +
+                    "<body> <table > " +
+                    "<tr> <td> " + "MTI  " + "</td>" +
+                    "<td> " + "Count" + "</td> </tr></b>" +htmldata+
+//                    "<tr> <td> " + countArray.get(0) + "</td>" +
+//                    "<td> " + countArray.get(1) + "</td> </tr></b>" +
+//                    "<tr> <td> " + countArray.get(2) + "</td>" +
+//                    "<td> " + countArray.get(3) + "</td> </tr></b>" +
+//                    "<tr> <td> " + countArray.get(4) + "</td>" +
+//                    "<td> " + countArray.get(5) + "</td> </tr></b>" +
+//                    "<tr> <td> " + countArray.get(6) + "</td>" +
+//                    "<td> " + countArray.get(7) + "</td> </tr></b>" +
+//                    "<tr> <td> " + countArray.get(8) + "</td>" +
+//                    "<td> " + countArray.get(9) + "</td> </tr></b>" +
+//                    "<tr> <td> " + countArray.get(10) + "</td>" +
+//                    "<td> " + countArray.get(11) + "</td> </tr></b>" +
+//                    "<tr> <td> " + countArray.get(12) + "</td>" +
+//                    "<td> " + countArray.get(13) + "</td> </tr></b>" +
+                    "</table> </body> <html>";
+
+//            System.out.println(msgBody);
+            String subject = "Transactions count for the Time of _";
+            message.setSubject(subject + date);
+            message.setContent(msgBody, "text/html");
+            int reversal = countArray.indexOf("0400");
+            if (Integer.parseInt(countArray.get(reversal + 1)) > 100) {
+                sender.send(message);
+                logger.info("mail sent");
+            } else {
+                logger.info("reversal count less than 1000");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("Empty set found for query execution");
+        }
+    }
+
+
+    @GetMapping("/reversalcount/html")
+    public String reversalCounthtml( @ModelAttribute List<String> model) throws Exception {
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd ");
+        String date = simpleDateFormat.format(calendar.getTime());
+        System.out.println(date);
+
+        try {
+            Statement statement = getConnection().createStatement();
+            String query = "Select MTI,count(*) from switch_request where RequestRouteTime like '" + date + "%' group by MTI;";
+//            String query = "Select MTI,count(*) from switch_request  group by MTI;";
+            logger.info(query);
+            ResultSet resultset = statement.executeQuery(query);
+
+            List<Object[]> transactionDatasmobikwik = new ArrayList<>();
+            List<String> countArray = new ArrayList<>();
+            while (resultset.next()) {
+                int cols = resultset.getMetaData().getColumnCount();
+                Object[] arr = new Object[cols];
+                for (int i = 0; i < cols; i++) {
+                    arr[i] = resultset.getObject(i + 1);
+                }
+                for (int i1 = 0; i1 < arr.length; i1++) {
+                    if (arr.length % 2 == 0) {
+                        logger.info(String.valueOf(arr[i1]));
+                        countArray.add(String.valueOf(arr[i1]));
+                    }
+                }
+            }
+            try {
+                mtiBasedMailSend(countArray);
+            }catch (Exception e){
+                e.printStackTrace();
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+
+    public void htmlresponse(List<String> countArray1) throws MessagingException {
+
+
+        final String TO = "rameshkumarm@bijlipay.co.in";
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH");
