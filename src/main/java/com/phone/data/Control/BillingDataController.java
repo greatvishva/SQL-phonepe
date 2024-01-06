@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
@@ -63,7 +65,6 @@ public class BillingDataController {
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, username, password);
     }
-
 
 
 
@@ -357,17 +358,9 @@ public class BillingDataController {
                     "<td> "+countArray.get(5)+ "</td> </tr></b>"+
                     "</table> </body> <html>";
 
-//                    "Phonepe  - " + countArray.get(0)+ "\n\n"+
-//                    "Axis     - " + countArray.get(1)+ "\n\n"+
-//                    "Hitachi  - " + countArray.get(2)+ "\n\n"+
-//                    "KVB      - " + countArray.get(3)+ "\n\n"+
-//                    "Mobikwik - " + countArray.get(4)+ "\n\n";
-
-
             String subject = "Phonepe_billing data count for the date of _";
             message.setSubject(subject+yesterday);
             message.setContent(msgBody, "text/html");
-//            mailhandler.commonSendMail(msgBody, subject);
             sender.send(message);
             logger.info("mail sent");
 
@@ -380,94 +373,46 @@ public class BillingDataController {
 
     @Scheduled(cron = "0 */5 * * * *")
     @GetMapping("/reversalcount")
-    public void reversalCount() throws Exception{
-        final String TO = "rameshkumarm@bijlipay.co.in";
+    public void reversalCount() throws Exception {
+
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH");
         String date = simpleDateFormat.format(calendar.getTime());
         System.out.println(date);
 
-
         try {
-            Statement statement =getConnection().createStatement();
-            String query = "Select MTI,count(*) from switch_request where RequestRouteTime like '"+date+"%' group by MTI;";
+            Statement statement = getConnection().createStatement();
+            String query = "Select MTI,count(*) from switch_request where RequestRouteTime like '" + date + "%' group by MTI;";
 //            String query = "Select MTI,count(*) from switch_request  group by MTI;";
             logger.info(query);
             ResultSet resultset = statement.executeQuery(query);
-            List<Object[]> transactionDatasmobikwik = new ArrayList<>();
-            List<String> countArray = new ArrayList<>();
-            while (resultset.next()) {
-                int cols = resultset.getMetaData().getColumnCount();
-                Object[] arr = new Object[cols];
-                for (int i = 0; i < cols; i++) {
-                    arr[i] = resultset.getObject(i+1 );
-//                    logger.info(arr.toString());
-//                    for (Object fi:arr){
 
-//                    }
-                }
-                for(int i1=0;i1 <arr.length;i1++) {
-
-
-                    if (arr.length % 2 == 0) {
-                        logger.info(String.valueOf(arr[i1]));
-                        countArray.add(String.valueOf(arr[i1]));
+                List<Object[]> transactionDatasmobikwik = new ArrayList<>();
+                List<String> countArray = new ArrayList<>();
+                while (resultset.next()) {
+                    int cols = resultset.getMetaData().getColumnCount();
+                    Object[] arr = new Object[cols];
+                    for (int i = 0; i < cols; i++) {
+                        arr[i] = resultset.getObject(i + 1);
+                    }
+                    for (int i1 = 0; i1 < arr.length; i1++) {
+                        if (arr.length % 2 == 0) {
+                            logger.info(String.valueOf(arr[i1]));
+                            countArray.add(String.valueOf(arr[i1]));
+                        }
                     }
                 }
-                transactionDatasmobikwik.add(arr);
-//                logger.info(transactionDatasmobikwik.toString());
-//                logger.info(arr.toString());
+             try {
+                 mtiBasedMailSend(countArray);
+             }catch (Exception e){
+                 e.printStackTrace();
 
-            }
-
-        MimeMessage message = sender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, false, "utf-8");
-
-            message.setFrom("docs@bijlipay.co.in");
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(TO));
-
-
-            String msgBody = "Dear All," + "\n\n" + "Greetings from Bijlipay!!" + "\n\n" + "Here mentioned  " + " MTI wise transaction count, please inform if count more than 1000 for reversal. " + "\n\n" + "Regards," + "\n" + "Team " + "Bijlipay\n\n Note :" + "This is an auto generated email. Please do not respond to this email id...\n\n " +
-                    "<html> <head> <title> MTI wise count details </title> </head>"+
-                    "<body> <table > " +
-                    "<tr> <td> " + "MTI  "+ "</td>"+
-                    "<td> "+"Count"+"</td> </tr></b>"+
-                    "<tr> <td> " + countArray.get(0)+ "</td>"+
-                    "<td> "+countArray.get(1)+ "</td> </tr></b>"+
-                    "<tr> <td> " + countArray.get(2)+ "</td>"+
-                    "<td> "+countArray.get(3)+ "</td> </tr></b>"+
-                    "<tr> <td> " + countArray.get(4)+ "</td>"+
-                    "<td> "+countArray.get(5)+ "</td> </tr></b>"+
-                    "<tr> <td> " + countArray.get(6)+ "</td>"+
-                    "<td> "+countArray.get(7)+ "</td> </tr></b>"+
-                    "<tr> <td> " + countArray.get(8)+ "</td>"+
-                    "<td> "+countArray.get(9)+ "</td> </tr></b>"+
-                    "<tr> <td> " + countArray.get(10)+ "</td>"+
-                    "<td> "+countArray.get(11)+ "</td> </tr></b>"+
-                    "<tr> <td> " + countArray.get(12)+ "</td>"+
-                    "<td> "+countArray.get(13)+ "</td> </tr></b>"+
-                    "</table> </body> <html>";
-
-
-
-            String subject = "Transactions count for the Time of _";
-            message.setSubject(subject+date);
-            message.setContent(msgBody, "text/html");
-//            mailhandler.commonSendMail(msgBody, subject);
-//            if(Integer.parseInt(countArray.get(8)) >= 1000) {
-//                sender.send(message);
-//                logger.info("mail sent");
-//            }
-            sender.send(message);
-                logger.info("mail sent");
-//            logger.info("reversal count less than 1000");
-
+             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
     public HashMap resultSetToHashMap(ResultSet rs) throws SQLException {
 
         ResultSetMetaData md = rs.getMetaData();
@@ -482,5 +427,63 @@ public class BillingDataController {
             }
         }
         return row;
+    }
+
+
+
+    public void mtiBasedMailSend(List<String> countArray1) throws MessagingException {
+
+
+        final String TO = "txn.support@bijlipay.co.in";
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH");
+        String date = simpleDateFormat.format(calendar.getTime());
+        System.out.println(date);
+        List<String> countArray = countArray1;
+        MimeMessage message = sender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, false, "utf-8");
+
+        message.setFrom("docs@bijlipay.co.in");
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(TO));
+
+        try {
+            String msgBody = "Dear All," + "\n\n" + "Greetings from Bijlipay!!" + "\n\n" + "Here mentioned  " + " MTI wise transaction count, please inform if count more than 1000 for reversal. " + "\n\n" + "Regards," + "\n" + "Team " + "Bijlipay\n\n Note :" + "This is an auto generated email. Please do not respond to this email id...\n\n " +
+                    "<html> <head> <title> MTI wise count details </title> </head>" +
+                    "<body> <table > " +
+                    "<tr> <td> " + "MTI  " + "</td>" +
+                    "<td> " + "Count" + "</td> </tr></b>" +
+                    "<tr> <td> " + countArray.get(0) + "</td>" +
+                    "<td> " + countArray.get(1) + "</td> </tr></b>" +
+                    "<tr> <td> " + countArray.get(2) + "</td>" +
+                    "<td> " + countArray.get(3) + "</td> </tr></b>" +
+                    "<tr> <td> " + countArray.get(4) + "</td>" +
+                    "<td> " + countArray.get(5) + "</td> </tr></b>" +
+                    "<tr> <td> " + countArray.get(6) + "</td>" +
+                    "<td> " + countArray.get(7) + "</td> </tr></b>" +
+                    "<tr> <td> " + countArray.get(8) + "</td>" +
+                    "<td> " + countArray.get(9) + "</td> </tr></b>" +
+                    "<tr> <td> " + countArray.get(10) + "</td>" +
+                    "<td> " + countArray.get(11) + "</td> </tr></b>" +
+                    "<tr> <td> " + countArray.get(12) + "</td>" +
+                    "<td> " + countArray.get(13) + "</td> </tr></b>" +
+                    "</table> </body> <html>";
+
+
+            String subject = "Transactions count for the Time of _";
+            message.setSubject(subject + date);
+            message.setContent(msgBody, "text/html");
+            int reversal = countArray.indexOf("0400");
+            if (Integer.parseInt(countArray.get(reversal + 1)) > 200) {
+                sender.send(message);
+                logger.info("mail sent");
+            } else {
+                logger.info("reversal count less than 1000");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("Empty set found for query execution");
+        }
     }
 }

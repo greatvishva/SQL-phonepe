@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.phone</groupId>
 	<artifactId>billing</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.4</version>
 	<name>billing</name>
 	<description>project for phonepe data to earth DB</description>
 	<properties>

@@ -14,4 +14,7 @@ public interface BillingAxisRepo extends JpaRepository<AxisTransaction,String> {
     @Query(value = "select count(*) from axis_transaction where  RequestRouteTime like ?1% ",nativeQuery = true)
 //    @Query(value = "select count(*) from axis_transaction ",nativeQuery = true)
     String yesterdayCount(String yesterday);
+
+
+
 }
