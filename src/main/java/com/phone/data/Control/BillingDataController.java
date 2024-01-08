@@ -343,17 +343,17 @@ public class BillingDataController {
                    "<html> <head> <title> Institution wise count details </title> </head>"+
                     "<body> <table > " +
                     "<tr> <td> " + "phonepe -"+ "</td>"+
-                    "<td> "+countArray.get(0)+ "</td> </tr></b>"+
+                    "<td> "+countArray.get(0)+ "</td> </tr></br>"+
                     "<tr> <td> " + "Axis -"+ "</td>"+
-                    "<td> "+countArray.get(1)+ "</td> </tr></b>"+
+                    "<td> "+countArray.get(1)+ "</td> </tr></br>"+
                     "<tr> <td> " + "Hitachi -"+ "</td>"+
-                    "<td> "+countArray.get(2)+ "</td> </tr></b>"+
+                    "<td> "+countArray.get(2)+ "</td> </tr></br>"+
                     "<tr> <td> " + "KVB -"+ "</td>"+
-                    "<td> "+countArray.get(3)+ "</td> </tr></b>"+
+                    "<td> "+countArray.get(3)+ "</td> </tr></br>"+
                     "<tr> <td> " + "Mobikwik -"+ "</td>"+
-                    "<td> "+countArray.get(4)+ "</td> </tr></b>"+
+                    "<td> "+countArray.get(4)+ "</td> </tr></br>"+
                     "<tr> <td> " + "StaticQR -"+ "</td>"+
-                    "<td> "+countArray.get(5)+ "</td> </tr></b>"+
+                    "<td> "+countArray.get(5)+ "</td> </tr>"+
                     "</table> </body> <html>";
 
             String subject = "Phonepe_billing data count for the date of _";
@@ -395,7 +395,7 @@ public class BillingDataController {
                     }
                     for (int i1 = 0; i1 < arr.length; i1++) {
                         if (arr.length % 2 == 0) {
-                            logger.info(String.valueOf(arr[i1]));
+//                            logger.info(String.valueOf(arr[i1]));
                             countArray.add(String.valueOf(arr[i1]));
                         }
                     }
@@ -433,6 +433,7 @@ public class BillingDataController {
 
 
         final String TO = "txn.support@bijlipay.co.in";
+//        final String TO = "rameshkumarm@bijlipay.co.in";
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH");
@@ -450,7 +451,7 @@ public class BillingDataController {
              htmldata.append("<tr> <td> " + countArray.get(i) + "</td>").toString();
 //                System.out.println("odd"+htmldata);
             }if(i%2==1){
-                htmldata.append("<td> " + countArray.get(i) + "</td> </tr></b>").toString();
+                htmldata.append("<td> " + countArray.get(i) + "</td> </tr>").toString();
 //                System.out.println("even"+htmldata);
             }
         }
@@ -460,7 +461,7 @@ public class BillingDataController {
                     "<html> <head> <title> MTI wise count details </title> </head>" +
                     "<body> <table > " +
                     "<tr> <td> " + "MTI  " + "</td>" +
-                    "<td> " + "Count" + "</td> </tr></b>" +htmldata+
+                    "<td> " + "Count" + "</td> </tr>" +htmldata+
 //                    "<tr> <td> " + countArray.get(0) + "</td>" +
 //                    "<td> " + countArray.get(1) + "</td> </tr></b>" +
 //                    "<tr> <td> " + countArray.get(2) + "</td>" +
@@ -561,21 +562,21 @@ public class BillingDataController {
                     "<html> <head> <title> MTI wise count details </title> </head>" +
                     "<body> <table > " +
                     "<tr> <td> " + "MTI  " + "</td>" +
-                    "<td> " + "Count" + "</td> </tr></b>" +
+                    "<td> " + "Count" + "</td> </tr></br>" +
                     "<tr> <td> " + countArray.get(0) + "</td>" +
-                    "<td> " + countArray.get(1) + "</td> </tr></b>" +
+                    "<td> " + countArray.get(1) + "</td> </tr></br>" +
                     "<tr> <td> " + countArray.get(2) + "</td>" +
-                    "<td> " + countArray.get(3) + "</td> </tr></b>" +
+                    "<td> " + countArray.get(3) + "</td> </tr></br>" +
                     "<tr> <td> " + countArray.get(4) + "</td>" +
-                    "<td> " + countArray.get(5) + "</td> </tr></b>" +
+                    "<td> " + countArray.get(5) + "</td> </tr></br>" +
                     "<tr> <td> " + countArray.get(6) + "</td>" +
-                    "<td> " + countArray.get(7) + "</td> </tr></b>" +
+                    "<td> " + countArray.get(7) + "</td> </tr></br>" +
                     "<tr> <td> " + countArray.get(8) + "</td>" +
-                    "<td> " + countArray.get(9) + "</td> </tr></b>" +
+                    "<td> " + countArray.get(9) + "</td> </tr></br>" +
                     "<tr> <td> " + countArray.get(10) + "</td>" +
-                    "<td> " + countArray.get(11) + "</td> </tr></b>" +
+                    "<td> " + countArray.get(11) + "</td> </tr></br>" +
                     "<tr> <td> " + countArray.get(12) + "</td>" +
-                    "<td> " + countArray.get(13) + "</td> </tr></b>" +
+                    "<td> " + countArray.get(13) + "</td> </tr>" +
                     "</table> </body> <html>";
 
 
