@@ -15,5 +15,9 @@ public interface BillingService {
     String findByRespRecTimeHitachi();
     String findByRespRecTimeMobikwik();
     String findByRespRecTimestaticqr();
+    String findByDateTimeNotificationData();
+    Long findByNotificationFields();
     List<String> insertedcounts();
+
+
 }

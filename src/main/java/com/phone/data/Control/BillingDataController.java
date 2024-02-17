@@ -1,9 +1,11 @@
 package com.phone.data.Control;
 
+import com.opencsv.CSVWriter;
 import com.phone.data.Entity.PhonepeTransaction;
 
 import com.phone.data.Impl.Mailhandler;
 import com.phone.data.Service.BillingService;
+import org.apache.el.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import org.springframework.data.relational.core.sql.In;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.ui.Model;
+import org.springframework.util.AutoPopulatingList;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.Message;
@@ -19,6 +23,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
+import java.io.FileWriter;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -131,6 +136,8 @@ public class BillingDataController {
         String kvb = billingDataService.findByRespRecTimeKvb();
         String hitachi = billingDataService.findByRespRecTimeHitachi();
         String mobikwik = billingDataService.findByRespRecTimeMobikwik();
+        String notidata = billingDataService.findByDateTimeNotificationData();
+        Long notifields = billingDataService.findByNotificationFields();
 
 
         try {
@@ -142,7 +149,7 @@ public class BillingDataController {
 //            String query = "SELECT req.TxnCorrelationId,req.TerminalId, req.MerchantId, req.MTI, req.TxnType, res.Stan, res.AuthResponseCode,res.TxnResponseCode, req.TxnAmount, req.TxnAdditionalAmount,req.BatchNumber,req.InvoiceNumber, res.RRNumber, req.InstitutionId, req.RequestRouteTime, res.ResponseReceivedTime FROM switch_request req left join switch_response res" +
 //                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WL002' and req.RequestRouteTime  between '" + phonepe +
 //                    "' AND DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 2 MINUTE) ORDER BY req.RequestRouteTime limit 500";
-            String query = "SELECT req.TxnCorrelationId,req.TerminalId, req.MerchantId, req.MTI, req.TxnType, res.Stan, res.AuthResponseCode,res.TxnResponseCode, req.TxnAmount, req.TxnAdditionalAmount,req.BatchNumber,req.InvoiceNumber, res.RRNumber, req.InstitutionId, req.RequestRouteTime, res.ResponseReceivedTime FROM switch_request req left join switch_response res" +
+            String query = "SELECT req.TxnCorrelationId,req.TerminalId, req.MerchantId, req.MTI, req.TxnType, res.Stan, res.AuthResponseCode,res.TxnResponseCode, req.TxnAmount, req.TxnAdditionalAmount,req.BatchNumber,req.InvoiceNumber, res.RRNumber, req.InstitutionId, req.RequestRouteTime, res.ResponseReceivedTime ,req.BIN,req.CardInfo,req.PANEntryMode,req.DeviceInvoiceNumber FROM switch_request req left join switch_response res" +
                     " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WL002' and req.RequestRouteTime  > '" + phonepe +
                     "'  ORDER BY req.RequestRouteTime limit 500";
             logger.info("Output query : {}", query);
@@ -276,6 +283,60 @@ public class BillingDataController {
             resultSet4.close();
             stmt4.close();
 
+
+            //Notificationdata
+            Statement  stmt5 = con.createStatement();
+
+
+//            String querymobikwik = "SELECT req.TxnCorrelationId,req.TerminalId, req.MerchantId, req.MTI, req.TxnType, res.Stan, res.AuthResponseCode,res.TxnResponseCode, req.TxnAmount, req.TxnAdditionalAmount,req.BatchNumber,req.InvoiceNumber, res.RRNumber, req.InstitutionId, req.RequestRouteTime, res.ResponseReceivedTime FROM switch_request req left join switch_response res" +
+//                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WL003' and req.RequestRouteTime  between '" + mobikwik +
+//                    "' AND DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 2 MINUTE) ORDER BY req.RequestRouteTime limit 200";
+            String queryNotiData = "select n.TxnCorrelationId,n.TerminalId,n.merchant_Id,n.batch_number,n.invoice_number,n.response_code,n.rrn,n.transaction_auth_code,n.transaction_date_time,n.DateTime,n.TransactionId,n.OrgTransactionId,n.TransactionType,n.NotificationType,n.Stan,n.settlement_status,n.notification_fields_id from notification_data n where n.DateTime > '" + notidata +
+                    "' ORDER BY n.DateTime limit 1000";
+            logger.info("Output query NotificationData : {}", queryNotiData);
+
+            List<Object[]> transactionDataNotiData = new ArrayList<>();
+            ResultSet resultSet5 = stmt5.executeQuery(queryNotiData);
+            while (resultSet5.next()) {
+                int cols = resultSet5.getMetaData().getColumnCount();
+                Object[] arr = new Object[cols];
+                for (int i = 0; i < cols; i++) {
+                    arr[i] = resultSet5.getObject(i + 1);
+                }
+                transactionDataNotiData.add(arr);
+
+            }
+            logger.info("SWITCH-TXN : transactions size NotificationData : {}", transactionDataNotiData.size());
+            resultSet5.close();
+            stmt5.close();
+
+
+            //NotificationFields
+            Statement  stmt6 = con.createStatement();
+          logger.info("Notfication field id-----{}",notifields);
+
+//            String querymobikwik = "SELECT req.TxnCorrelationId,req.TerminalId, req.MerchantId, req.MTI, req.TxnType, res.Stan, res.AuthResponseCode,res.TxnResponseCode, req.TxnAmount, req.TxnAdditionalAmount,req.BatchNumber,req.InvoiceNumber, res.RRNumber, req.InstitutionId, req.RequestRouteTime, res.ResponseReceivedTime FROM switch_request req left join switch_response res" +
+//                    " ON req.TxnCorrelationId=res.TxnCorrelationId where req.InstitutionId ='WL003' and req.RequestRouteTime  between '" + mobikwik +
+//                    "' AND DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 2 MINUTE) ORDER BY req.RequestRouteTime limit 200";
+            String querynotifields = "select f.Id,f.pos_Device_Id,f.card_holder_name,f.masked_card_number,f.transaction_mode,f.acquirer_bank,f.card_type,f.card_network,f.card_issuer_country_code,f.amount,f.invoice_number,f.batch_number,f.TerminalId from notification_fields f where f.Id > '" + notifields +
+                    "' ORDER BY f.Id limit 500";
+            logger.info("Output query NotificationFields : {}", querynotifields);
+
+            List<Object[]> transactionDatanotifields = new ArrayList<>();
+            ResultSet resultSet6 = stmt6.executeQuery(querynotifields);
+            while (resultSet6.next()) {
+                int cols = resultSet6.getMetaData().getColumnCount();
+                Object[] arr = new Object[cols];
+                for (int i = 0; i < cols; i++) {
+                    arr[i] = resultSet6.getObject(i + 1);
+                }
+                transactionDatanotifields.add(arr);
+
+            }
+            logger.info("SWITCH-TXN : transactions size NotificationFields : {}", transactionDatanotifields.size());
+            resultSet6.close();
+            stmt6.close();
+
             con.close();
             logger.info("Connection closed Status  {}",con.isClosed());
             billingDataService.fetchAndSaveTxnData(transactionDatasphonepe,1);
@@ -283,11 +344,14 @@ public class BillingDataController {
             billingDataService.fetchAndSaveTxnData(transactionDatasaxis,2);
             billingDataService.fetchAndSaveTxnData(transactionDataskvb,3);
             billingDataService.fetchAndSaveTxnData(transactionDatasmobikwik,4);
+            billingDataService.fetchAndSaveTxnData(transactionDataNotiData,6);
+            billingDataService.fetchAndSaveTxnData(transactionDatanotifields,7);
 
 
         } catch (Exception e) {
             logger.info("Error on controller page");
             e.printStackTrace();
+
         }finally {
             con.close();
             staticqrTxn();
@@ -298,12 +362,12 @@ public class BillingDataController {
     public void staticqrTxn() throws SQLException {
 
         try {
-            String init = billingDataService.findByRespRecTimestaticqr();
+            String init = billingDataService.findByRespRecTimestaticqr().replace("T"," ");
             Connection con1 = DriverManager.getConnection(url1, username1, password1);
             Statement statement = con1.createStatement();
             List<Object[]> transactionDatastaticqr = new ArrayList<>();
-            String query = "select * from static_qr_txn where created_at > '" + init + "' order by created_at desc limit 100 ";
-           logger.info("StaticQR txn Quert {}",query);
+            String query = "select txn_id,checksum,created_at,credit_vpa,customer_vpa,gateway_response_code,gateway_response_message,gateway_transaction_id,init_mode,merchant_channel_id,merchant_id,merchant_transaction_id,payeractype,purpose_code,rrn,transaction_amount,transaction_timestamp from static_qr_txn where created_at > '" + init + "' order by created_at desc limit 100 ";
+           logger.info("StaticQR txn Query {}",query);
             ResultSet resultSet5 = statement.executeQuery(query);
             while (resultSet5.next()) {
                 int cols = resultSet5.getMetaData().getColumnCount();
@@ -319,7 +383,7 @@ public class BillingDataController {
             statement.close();
 
             con1.close();
-            billingDataService.fetchAndSaveTxnData(transactionDatastaticqr, 6);
+            billingDataService.fetchAndSaveTxnData(transactionDatastaticqr, 8);
         }catch (Exception e){
             logger.info("Error on static qr controller page");
             e.printStackTrace();
@@ -353,7 +417,9 @@ public class BillingDataController {
                     "<tr> <td> " + "Mobikwik -"+ "</td>"+
                     "<td> "+countArray.get(4)+ "</td> </tr></br>"+
                     "<tr> <td> " + "StaticQR -"+ "</td>"+
-                    "<td> "+countArray.get(5)+ "</td> </tr>"+
+                    "<td> "+countArray.get(5)+ "</td> </tr></br>"+
+                    "<tr> <td> " + "NotiData -"+ "</td>"+
+                    "<td> "+countArray.get(6)+ "</td> </tr>"+
                     "</table> </body> <html>";
 
             String subject = "Phonepe_billing data count for the date of _";
@@ -364,6 +430,7 @@ public class BillingDataController {
 
         } catch (Exception e) {
             e.printStackTrace();
+
         }
     }
 
@@ -497,48 +564,73 @@ public class BillingDataController {
     }
 
 
-    @GetMapping("/reversalcount/html")
-    public String reversalCounthtml( @ModelAttribute List<String> model) throws Exception {
-
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd ");
-        String date = simpleDateFormat.format(calendar.getTime());
-        System.out.println(date);
-
-        try {
-            Statement statement = getConnection().createStatement();
-            String query = "Select MTI,count(*) from switch_request where RequestRouteTime like '" + date + "%' group by MTI;";
+//    @GetMapping("/html")
+//    public String index(Model model) throws Exception {
+//        model.addAttribute("chartData", getChartData());
+//        return "index1";
+//    }
+//
+//    public List<List<Object>> getChartData(  ) throws Exception {
+////         model.addAttribute("hour","hour");
+//
+//        Calendar calendar = Calendar.getInstance();
+//
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd ");
+//        String date = simpleDateFormat.format(calendar.getTime());
+//        System.out.println(date);
+//        List<List<Object>> data = null;
+//        List<String> countArray = null;
+//        try {
+//            Statement statement = getConnection().createStatement();
+////            String query = "Select MTI,count(*) from switch_request where RequestRouteTime like '" + date + "%' group by MTI;";
 //            String query = "Select MTI,count(*) from switch_request  group by MTI;";
-            logger.info(query);
-            ResultSet resultset = statement.executeQuery(query);
-
-            List<Object[]> transactionDatasmobikwik = new ArrayList<>();
-            List<String> countArray = new ArrayList<>();
-            while (resultset.next()) {
-                int cols = resultset.getMetaData().getColumnCount();
-                Object[] arr = new Object[cols];
-                for (int i = 0; i < cols; i++) {
-                    arr[i] = resultset.getObject(i + 1);
-                }
-                for (int i1 = 0; i1 < arr.length; i1++) {
-                    if (arr.length % 2 == 0) {
-                        logger.info(String.valueOf(arr[i1]));
-                        countArray.add(String.valueOf(arr[i1]));
-                    }
-                }
-            }
-            try {
-                mtiBasedMailSend(countArray);
-            }catch (Exception e){
-                e.printStackTrace();
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return date;
-    }
+//            logger.info(query);
+//            ResultSet resultset = statement.executeQuery(query);
+//
+//            List<Object[]> transactionDatasmobikwik = new ArrayList<>();
+//            countArray = new ArrayList<>();
+//            List<Object> objects = null;
+//            while (resultset.next()) {
+//                int cols = resultset.getMetaData().getColumnCount();
+//                Object[] arr = new Object[cols];
+////                for (int i = 0; i < cols; i++) {
+////                    arr[i] = resultset.getObject(i + 1);
+////                }
+////                for (int i1 = 0; i1 < arr.length; i1++) {
+////                    if (arr.length % 2 == 0) {
+////                        logger.info(String.valueOf(arr[i1]));
+////                        countArray.add(String.valueOf(arr[i1]));
+////                    }
+////                }
+//
+//                for (int i = 0; i < cols; i++) {
+//
+//
+//                    for (int j = 0; j < cols; j++) {
+//                        List<Object> string = new ArrayList<>(j);
+//                        System.out.println(string);
+//                        System.out.println(j);
+//
+//                    }
+//                    objects = new ArrayList<>(i);
+//                    System.out.println(objects);
+//                    System.out.println(i);
+//                }
+//            }
+//            data = Collections.singletonList(objects);
+//
+//            try {
+//                mtiBasedMailSend(countArray);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return
+//    }
 
 
     public void htmlresponse(List<String> countArray1) throws MessagingException {
@@ -595,5 +687,7 @@ public class BillingDataController {
             e.printStackTrace();
             logger.info("Empty set found for query execution");
         }
+
     }
+
 }

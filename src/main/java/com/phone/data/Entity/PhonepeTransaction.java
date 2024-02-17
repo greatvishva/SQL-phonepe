@@ -58,14 +58,26 @@ public class PhonepeTransaction {
     private String InstitutionId="N/A";
     @Column (name = "RequestRouteTime")
     private String RequestRouteTime="N/A";
-    @Column (name = "ResponseReceivedTime")
-    private String ResponseReceivedTime="N/A";
+    @Column (name = "ResponseReceivedTime")    private String ResponseReceivedTime="N/A";
+
+
+    @Column (name = "BIN")    private String BIN="N/A";
+    @Column (name = "CardInfo")    private String CardInfo="N/A";
+    @Column (name = "PANEntryMode")    private String PANEntryMode="N/A";
+    @Column (name = "DeviceInvoiceNumber")    private String DeviceInvoiceNumber="N/A";
 
 
     @UpdateTimestamp
 //    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp updatedate;
 
+    public long getRowid() {
+        return rowid;
+    }
+
+    public void setRowid(long rowid) {
+        this.rowid = rowid;
+    }
 
     public String getId() {
         return id;
@@ -195,10 +207,43 @@ public class PhonepeTransaction {
         ResponseReceivedTime = responseReceivedTime;
     }
 
+    public String getBIN() {
+        return BIN;
+    }
+
+    public void setBIN(String BIN) {
+        this.BIN = BIN;
+    }
+
+    public String getCardInfo() {
+        return CardInfo;
+    }
+
+    public void setCardInfo(String cardInfo) {
+        CardInfo = cardInfo;
+    }
+
+    public String getPANEntryMode() {
+        return PANEntryMode;
+    }
+
+    public void setPANEntryMode(String PANEntryMode) {
+        this.PANEntryMode = PANEntryMode;
+    }
+
+    public String getDeviceInvoiceNumber() {
+        return DeviceInvoiceNumber;
+    }
+
+    public void setDeviceInvoiceNumber(String deviceInvoiceNumber) {
+        DeviceInvoiceNumber = deviceInvoiceNumber;
+    }
+
     @Override
     public String toString() {
-        return "BillingEntity{" +
-                "id='" + id + '\'' +
+        return "PhonepeTransaction{" +
+                "rowid=" + rowid +
+                ", id='" + id + '\'' +
                 ", TerminalId='" + TerminalId + '\'' +
                 ", MerchantId='" + MerchantId + '\'' +
                 ", MTI='" + MTI + '\'' +
@@ -214,6 +259,10 @@ public class PhonepeTransaction {
                 ", InstitutionId='" + InstitutionId + '\'' +
                 ", RequestRouteTime='" + RequestRouteTime + '\'' +
                 ", ResponseReceivedTime='" + ResponseReceivedTime + '\'' +
+                ", BIN='" + BIN + '\'' +
+                ", CardInfo='" + CardInfo + '\'' +
+                ", PANEntryMode='" + PANEntryMode + '\'' +
+                ", DeviceInvoiceNumber='" + DeviceInvoiceNumber + '\'' +
                 ", updatedate=" + updatedate +
                 '}';
     }

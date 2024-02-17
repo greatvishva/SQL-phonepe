@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+<body>
+<h1> MTI based count</h1>
+<form th:action="register" th:method="Get" th:object="$(hour)">
+    <label>Enter hour</label>
+    <input type="text" th:field="*{time}">
+    <button type="submit">Submit</button>
+</form>
+
+</body>
+</html>

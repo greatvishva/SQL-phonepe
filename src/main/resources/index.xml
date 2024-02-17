@@ -1,4 +1,0 @@
-<form th:action="@{/}">
-    <input type="text" th:name="participant"/>
-    <input type="submit"/>
-</form>

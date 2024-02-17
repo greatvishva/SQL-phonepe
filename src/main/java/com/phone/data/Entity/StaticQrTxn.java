@@ -19,42 +19,24 @@ public class StaticQrTxn {
     @Column(name = "rowid")
     private Long rowid;
 
-    @Column(name = "txn_id")
-    private String txnId;
-    @Column(name = "checksum")
-    private String checksum;
-    @Column(name = "created_at")
-    private String createdAt;
-    @Column(name = "credit_vpa")
-    private String creditVpa;
-    @Column(name = "customer_vpa")
-    private String customerVpa;
-    @Column(name = "gateway_response_code")
-    private String gatewayResponseCode;
-    @Column(name = "gateway_response_message")
-    private String gatewayResponseMessage;
-    @Column(name = "gateway_transaction_id")
-    private String gatewayTransactionId;
-    @Column(name = "merchant_channel_id")
-    private String merchantChannelId;
-    @Column(name = "merchant_id")
-    private String merchantId;
-    @Column(name = "merchant_transaction_id")
-    private String merchantTransactionId;
-    @Column(name = "rrn")
-    private String rrn;
-    @Column(name = "transaction_amount")
-    private String transactionAmount;
-    @Column(name = "transaction_timestamp")
-    private String transactionTimestamp;
-    @Column(name = "payeractype")
-    private String payeractype;
-    @Column(name = "init_mode")
-    private String init_mode;
-    @Column(name = "purpose_code")
-    private String purpose_code;
-    @Column(name = "bin")
-    private String bin;
+    @Column(name = "txn_id")    private String txnId;
+    @Column(name = "checksum")    private String checksum;
+    @Column(name = "created_at")    private String createdAt;
+    @Column(name = "credit_vpa")    private String creditVpa;
+    @Column(name = "customer_vpa")    private String customerVpa;
+    @Column(name = "gateway_response_code")    private String gatewayResponseCode;
+    @Column(name = "gateway_response_message")    private String gatewayResponseMessage;
+    @Column(name = "gateway_transaction_id")    private String gatewayTransactionId;
+    @Column(name = "merchant_channel_id")    private String merchantChannelId;
+    @Column(name = "merchant_id")    private String merchantId;
+    @Column(name = "merchant_transaction_id")    private String merchantTransactionId;
+    @Column(name = "rrn")    private String rrn;
+    @Column(name = "transaction_amount")    private String transactionAmount;
+    @Column(name = "transaction_timestamp")    private String transactionTimestamp;
+    @Column(name = "payeractype")    private String payeractype;
+    @Column(name = "init_mode")    private String init_mode;
+    @Column(name = "purpose_code")    private String purpose_code;
+    @Column(name = "bin")    private String bin;
 
     @UpdateTimestamp
 //    @Temporal(TemporalType.TIMESTAMP)
